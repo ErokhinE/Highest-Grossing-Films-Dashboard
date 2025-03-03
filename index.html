@@ -310,7 +310,7 @@
     <script>
         async function loadFilmsData() {
             try {
-                const response = await fetch('films.json'); // Укажите имя вашего JSON-файла
+                const response = await fetch('https://raw.githubusercontent.com/ErokhinE/Highest-Grossing-Films-Dashboard/refs/heads/main/films.json'); // Укажите имя вашего JSON-файла
                 const filmsData = await response.json();
                 initializeDashboard(filmsData);
             } catch (error) {
