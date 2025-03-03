@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Highest-Grossing Films Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Highest-Grossing Films Dashboard</h1>
+        <p class="subtitle">Explore the world's most financially successful movies</p>
+    </header>
+    
+    <div class="container">
+        <div class="dashboard-stats">
+            <div class="stat-card"><div class="stat-value" id="total-films">0</div><div class="stat-label">Total Films</div></div>
+            <div class="stat-card"><div class="stat-value" id="avg-box-office">$0</div><div class="stat-label">Avg. Box Office</div></div>
+            <div class="stat-card"><div class="stat-value" id="newest-film">2020</div><div class="stat-label">Newest Film</div></div>
+            <div class="stat-card"><div class="stat-value" id="top-director">-</div><div class="stat-label">Top Director</div></div>
+        </div>
+        
+        <div class="controls">
+            <input type="text" id="search-input" placeholder="Search by title or director...">
+            <select id="sort-select">
+                <option value="box-office-desc">Box Office (High to Low)</option>
+                <option value="box-office-asc">Box Office (Low to High)</option>
+                <option value="year-desc">Year (Newest First)</option>
+                <option value="year-asc">Year (Oldest First)</option>
+                <option value="title-asc">Title (A-Z)</option>
+                <option value="title-desc">Title (Z-A)</option>
+            </select>
+            <select id="filter-country"><option value="">All Countries</option></select>
+        </div>
+        
+        <div class="films-grid" id="films-container"></div>
+        <div class="pagination" id="pagination"></div>
+    </div>
+    
+    <footer><p>Data sourced from Wikipedia - List of Highest-Grossing Films</p></footer>
+    
+    <script src="app.js"></script>
+</body>
+</html>
