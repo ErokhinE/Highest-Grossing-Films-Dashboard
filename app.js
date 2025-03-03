@@ -45,4 +45,45 @@ function parseCurrency(str) {
     return parseFloat(str.replace(/[^0-9.]/g, '')) || 0;
 }
 
+function filterAndDisplayFilms() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const sortOption = sortSelect.value;
+    const countryValue = countryFilter.value;
+
+    let filteredFilms = filmsData.filter(film => {
+        const matchesSearch = film.title.toLowerCase().includes(searchTerm) || 
+                              (film.director && film.director.toLowerCase().includes(searchTerm));
+
+        const matchesCountry = !countryValue || (film.country && film.country.includes(countryValue));
+
+        return matchesSearch && matchesCountry;
+    });
+
+    const sortingFunctions = {
+        "box-office-desc": (a, b) => parseCurrency(b.box_office) - parseCurrency(a.box_office),
+        "box-office-asc": (a, b) => parseCurrency(a.box_office) - parseCurrency(b.box_office),
+        "year-desc": (a, b) => b.release_year - a.release_year,
+        "year-asc": (a, b) => a.release_year - b.release_year,
+        "title-asc": (a, b) => a.title.localeCompare(b.title),
+        "title-desc": (a, b) => b.title.localeCompare(a.title)
+    };
+
+    if (sortingFunctions[sortOption]) {
+        filteredFilms.sort(sortingFunctions[sortOption]);
+    }
+
+    totalFilmsEl.textContent = filteredFilms.length;
+
+    const totalPages = Math.ceil(filteredFilms.length / filmsPerPage);
+    currentPage = Math.min(currentPage, Math.max(1, totalPages));
+
+    const startIndex = (currentPage - 1) * filmsPerPage;
+    const endIndex = Math.min(startIndex + filmsPerPage, filteredFilms.length);
+    const paginatedFilms = filteredFilms.slice(startIndex, endIndex);
+
+    displayFilms(paginatedFilms);
+    updatePagination(totalPages);
+}
+
+
 document.addEventListener('DOMContentLoaded', fetchFilms);
