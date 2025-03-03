@@ -1,6 +1,6 @@
-let filmsData = []; // This will hold the films data fetched from films.json
-let filmsPerPage = 10; // Number of films to display per page
-let currentPage = 1; // Current page number
+let filmsData = []; 
+let filmsPerPage = 10; 
+let currentPage = 1; 
 
 async function fetchFilms() {
     try {
@@ -107,17 +107,17 @@ function updatePagination(totalPages) {
     }
 }
 
-// Get references to the filter controls
+
 const searchInput = document.getElementById('search-input');
 const sortSelect = document.getElementById('sort-select');
 const countryFilter = document.getElementById('filter-country');
 
-// Add event listeners to the filter controls
+
 searchInput.addEventListener('input', filterAndDisplayFilms);
 sortSelect.addEventListener('change', filterAndDisplayFilms);
 countryFilter.addEventListener('change', filterAndDisplayFilms);
 
-// Dashboard statistics elements
+
 const totalFilmsEl = document.getElementById('total-films');
 const avgBoxOfficeEl = document.getElementById('avg-box-office');
 const newestFilmEl = document.getElementById('newest-film');
