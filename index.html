@@ -4,7 +4,249 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Highest-Grossing Films Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--primary-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--dark-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+        
+        .search-container {
+            flex-grow: 1;
+            position: relative;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+        }
+        
+        select {
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            min-width: 150px;
+        }
+        
+        select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+        }
+        
+        .films-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .film-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .film-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .film-card-header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 1rem;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .film-year {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .film-content {
+            padding: 1.5rem;
+        }
+        
+        .film-director {
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .film-country {
+            color: #555;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .film-box-office {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--success-color);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            gap: 0.5rem;
+        }
+        
+        .pagination button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .pagination button:hover {
+            background: #f0f0f0;
+        }
+        
+        .pagination button.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        footer {
+            background: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .films-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -14,14 +256,30 @@
     
     <div class="container">
         <div class="dashboard-stats">
-            <div class="stat-card"><div class="stat-value" id="total-films">0</div><div class="stat-label">Total Films</div></div>
-            <div class="stat-card"><div class="stat-value" id="avg-box-office">$0</div><div class="stat-label">Avg. Box Office</div></div>
-            <div class="stat-card"><div class="stat-value" id="newest-film">2020</div><div class="stat-label">Newest Film</div></div>
-            <div class="stat-card"><div class="stat-value" id="top-director">-</div><div class="stat-label">Top Director</div></div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-films">0</div>
+                <div class="stat-label">Total Films</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avg-box-office">$0</div>
+                <div class="stat-label">Avg. Box Office</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="newest-film">2020</div>
+                <div class="stat-label">Newest Film</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="top-director">-</div>
+                <div class="stat-label">Top Director</div>
+            </div>
         </div>
         
         <div class="controls">
-            <input type="text" id="search-input" placeholder="Search by title or director...">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search by title or director...">
+                <span class="search-icon">🔍</span>
+            </div>
+            
             <select id="sort-select">
                 <option value="box-office-desc">Box Office (High to Low)</option>
                 <option value="box-office-asc">Box Office (Low to High)</option>
@@ -30,14 +288,24 @@
                 <option value="title-asc">Title (A-Z)</option>
                 <option value="title-desc">Title (Z-A)</option>
             </select>
-            <select id="filter-country"><option value="">All Countries</option></select>
+            
+            <select id="filter-country">
+                <option value="">All Countries</option>
+            </select>
         </div>
         
-        <div class="films-grid" id="films-container"></div>
-        <div class="pagination" id="pagination"></div>
+        <div class="films-grid" id="films-container">
+            <!-- Films will be inserted here by JavaScript -->
+        </div>
+        
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be inserted here by JavaScript -->
+        </div>
     </div>
     
-    <footer><p>Data sourced from Wikipedia - List of Highest-Grossing Films</p></footer>
+    <footer>
+        <p>Data sourced from Wikipedia - List of Highest-Grossing Films</p>
+    </footer>
     
     <script src="app.js"></script>
 </body>
