@@ -44,6 +44,18 @@ function displayFilms(films) {
 function parseCurrency(str) {
     return parseFloat(str.replace(/[^0-9.]/g, '')) || 0;
 }
+const filmsContainer = document.getElementById('films-container');
+const searchInput = document.getElementById('search-input');
+const sortSelect = document.getElementById('sort-select');
+const countryFilter = document.getElementById('filter-country');
+const paginationEl = document.getElementById('pagination');
+
+// Dashboard statistics elements
+const totalFilmsEl = document.getElementById('total-films');
+const avgBoxOfficeEl = document.getElementById('avg-box-office');
+const newestFilmEl = document.getElementById('newest-film');
+const topDirectorEl = document.getElementById('top-director');
+
 
 function filterAndDisplayFilms() {
     const searchTerm = searchInput.value.toLowerCase();
