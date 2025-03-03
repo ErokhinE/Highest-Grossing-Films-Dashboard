@@ -1,3 +1,14 @@
+async function fetchFilms() {
+    try {
+        const response = await fetch('films.json');
+        const films = await response.json();
+        initializeDashboard(films);
+    } catch (error) {
+        console.error('Error loading films:', error);
+    }
+}
+
+
 const filmsContainer = document.getElementById('films-container');
 const searchInput = document.getElementById('search-input');
 const sortSelect = document.getElementById('sort-select');
