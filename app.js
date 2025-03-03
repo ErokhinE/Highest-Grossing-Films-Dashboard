@@ -1,8 +1,12 @@
+let filmsData = []; // This will hold the films data fetched from films.json
+let filmsPerPage = 10; // Number of films to display per page
+let currentPage = 1; // Current page number
+
 async function fetchFilms() {
     try {
         const response = await fetch('films.json');
-        const films = await response.json();
-        initializeDashboard(films);
+        filmsData = await response.json();
+        initializeDashboard(filmsData);
     } catch (error) {
         console.error('Error loading films:', error);
     }
@@ -44,18 +48,6 @@ function displayFilms(films) {
 function parseCurrency(str) {
     return parseFloat(str.replace(/[^0-9.]/g, '')) || 0;
 }
-const filmsContainer = document.getElementById('films-container');
-const searchInput = document.getElementById('search-input');
-const sortSelect = document.getElementById('sort-select');
-const countryFilter = document.getElementById('filter-country');
-const paginationEl = document.getElementById('pagination');
-
-// Dashboard statistics elements
-const totalFilmsEl = document.getElementById('total-films');
-const avgBoxOfficeEl = document.getElementById('avg-box-office');
-const newestFilmEl = document.getElementById('newest-film');
-const topDirectorEl = document.getElementById('top-director');
-
 
 function filterAndDisplayFilms() {
     const searchTerm = searchInput.value.toLowerCase();
@@ -63,7 +55,7 @@ function filterAndDisplayFilms() {
     const countryValue = countryFilter.value;
 
     let filteredFilms = filmsData.filter(film => {
-        const matchesSearch = film.title.toLowerCase().includes(searchTerm) || 
+        const matchesSearch = film.title.toLowerCase().includes(searchTerm) ||
                               (film.director && film.director.toLowerCase().includes(searchTerm));
 
         const matchesCountry = !countryValue || (film.country && film.country.includes(countryValue));
@@ -97,5 +89,38 @@ function filterAndDisplayFilms() {
     updatePagination(totalPages);
 }
 
+function updatePagination(totalPages) {
+    const paginationEl = document.getElementById('pagination');
+    paginationEl.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.addEventListener('click', () => {
+            currentPage = i;
+            filterAndDisplayFilms();
+        });
+        if (i === currentPage) {
+            button.classList.add('active');
+        }
+        paginationEl.appendChild(button);
+    }
+}
+
+// Get references to the filter controls
+const searchInput = document.getElementById('search-input');
+const sortSelect = document.getElementById('sort-select');
+const countryFilter = document.getElementById('filter-country');
+
+// Add event listeners to the filter controls
+searchInput.addEventListener('input', filterAndDisplayFilms);
+sortSelect.addEventListener('change', filterAndDisplayFilms);
+countryFilter.addEventListener('change', filterAndDisplayFilms);
+
+// Dashboard statistics elements
+const totalFilmsEl = document.getElementById('total-films');
+const avgBoxOfficeEl = document.getElementById('avg-box-office');
+const newestFilmEl = document.getElementById('newest-film');
+const topDirectorEl = document.getElementById('top-director');
 
 document.addEventListener('DOMContentLoaded', fetchFilms);
